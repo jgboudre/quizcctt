@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz – Introduction à la demande de subvention</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f9fafb;
+      color: #111827;
+      padding: 2rem;
+      max-width: 700px;
+      margin: auto;
+    }
+    .card {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: #1f2937;
+    }
+    button {
+      background: #3b82f6;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-weight: 600;
+      margin-top: 1rem;
+    }
+    button:hover {
+      background: #2563eb;
+    }
+    .feedback {
+      margin-top: 1rem;
+      font-weight: 600;
+    }
+    .correct {
+      color: #16a34a;
+    }
+    .incorrect {
+      color: #dc2626;
+    }
+    label {
+      display: block;
+      margin-top: 0.5rem;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="quiz-container"></div>
+
+  <script>
+    const questions = [
+      {
+        text: "Laquelle des affirmations décrit le mieux ce qu’est une demande de subvention ?",
+        type: "single",
+        choices: [
+          "Un formulaire administratif permettant de répondre à un appel d’offres.",
+          "Une présentation libre d’un projet devant un jury d’experts.",
+          "Un document structuré visant à obtenir un financement en démontrant la pertinence, l’impact et la capacité de réalisation du projet.",
+          "Une lettre de motivation collective écrite par les membres de l’équipe."
+        ],
+        correct: 2,
+        feedback: [
+          "❌ Ce n’est pas un simple formulaire, mais un document réfléchi, souvent long et structuré.",
+          "❌ Ce n’est pas une improvisation orale, mais une rédaction organisée.",
+          "✅ Exact ! Une demande de subvention est un document structuré, formel, qui présente un projet de manière convaincante.",
+          "❌ Bien qu’il puisse y avoir une dimension collective, ce n’est pas une lettre de motivation mais un document stratégique et complet."
+        ]
+      },
+      {
+        text: "Selon le contenu présenté, une demande de subvention n’est pas… (cocher toutes les bonnes réponses)",
+        type: "multiple",
+        choices: [
+          "Un concours de style littéraire.",
+          "Une improvisation avec ses partenaires.",
+          "Un article scientifique visant à exposer des résultats.",
+          "Un exercice stratégique de réflexion et de concertation."
+        ],
+        correct: [0, 1, 2],
+        feedback: [
+          "✅ Exact. Il ne s’agit pas d’éblouir par le style, mais de convaincre par la clarté et la structure.",
+          "✅ Oui. La demande de subvention doit être préparée, discutée, et planifiée à l’avance.",
+          "✅ Oui. Ce n’est pas un article scientifique : on présente une idée à réaliser, non des résultats déjà obtenus.",
+          "❌ Au contraire ! Une demande de subvention est un exercice stratégique et réfléchi."
+        ]
+      }
+    ];
+
+    let current = 0;
+    const container = document.getElementById("quiz-container");
+
+    function renderQuestion() {
+      container.innerHTML = "";
+      const q = questions[current];
+      const card = document.createElement("div");
+      card.className = "card";
+      const title = document.createElement("h1");
+      title.textContent = q.text;
+      card.appendChild(title);
+
+      const form = document.createElement("form");
+      q.choices.forEach((choice, index) => {
+        const label = document.createElement("label");
+        const input = document.createElement("input");
+        input.type = q.type === "single" ? "radio" : "checkbox";
+        input.name = "choice";
+        input.value = index;
+        label.appendChild(input);
+        label.append(" ", choice);
+        form.appendChild(label);
+      });
+
+      const submit = document.createElement("button");
+      submit.type = "button";
+      submit.textContent = "Soumettre";
+
+      const feedbackDiv = document.createElement("div");
+      feedbackDiv.className = "feedback hidden";
+
+      submit.addEventListener("click", () => {
+        const selected = Array.from(form.elements["choice"])
+          .filter(i => i.checked)
+          .map(i => parseInt(i.value));
+
+        feedbackDiv.innerHTML = "";
+        feedbackDiv.classList.remove("hidden");
+
+        if (q.type === "single") {
+          q.choices.forEach((_, i) => {
+            const p = document.createElement("p");
+            p.className = i === q.correct ? "correct" : "incorrect";
+            p.textContent = q.feedback[i];
+            feedbackDiv.appendChild(p);
+          });
+        } else {
+          q.choices.forEach((_, i) => {
+            const p = document.createElement("p");
+            const isCorrect = q.correct.includes(i);
+            const wasChecked = selected.includes(i);
+            p.className = isCorrect === wasChecked ? "correct" : "incorrect";
+            p.textContent = q.feedback[i];
+            feedbackDiv.appendChild(p);
+          });
+        }
+
+        const nextBtn = document.createElement("button");
+        nextBtn.textContent = "Question suivante";
+        nextBtn.type = "button";
+        nextBtn.style.marginLeft = "1rem";
+        nextBtn.addEventListener("click", () => {
+          current++;
+          if (current < questions.length) {
+            renderQuestion();
+          } else {
+            container.innerHTML = '<div class="card"><h1>Bravo, vous avez complété le quiz !</h1></div>';
+          }
+        });
+
+        feedbackDiv.appendChild(nextBtn);
+      });
+
+      card.appendChild(form);
+      card.appendChild(submit);
+      card.appendChild(feedbackDiv);
+      container.appendChild(card);
+    }
+
+    renderQuestion();
+  </script>
+</body>
+</html>
