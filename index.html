@@ -33,18 +33,19 @@
     }
     button {
       font-family: 'Archivo Narrow', sans-serif;
-      background: #2a6ebb;
+      background: #FF6F00; /* orange CCTT */
       color: white;
       border: none;
-      padding: 10px 15px;
+      padding: 12px 20px;
       margin: 5px 10px 10px 0;
       border-radius: 5px;
       cursor: pointer;
       font-weight: 700;
+      font-size: 1.1rem; /* plus grand */
       transition: background-color 0.3s ease;
     }
     button:hover {
-      background: #1e4f8b;
+      background: #e65a00; /* orange foncé au survol */
     }
     .feedback {
       margin-top: 10px;
@@ -69,37 +70,37 @@
   <script>
     const quizData = [
       {
-        question: "Qu’est-ce qu’une demande de subvention ?",
+        question: "Quel est le principal objectif d'une demande de subvention ?",
         options: [
-          "Un document formel pour solliciter un financement pour un projet.",
-          "Un concours littéraire pour la meilleure idée.",
-          "Un article scientifique détaillant les résultats d’un projet."
+          "Présenter une idée originale sans obligation de planification.",
+          "Obtenir un financement en démontrant la pertinence et la faisabilité du projet.",
+          "Écrire un article scientifique sur les résultats d’une recherche déjà terminée."
         ],
-        correctIndex: 0,
-        feedbackCorrect: "Exact! Une demande de subvention vise à obtenir des fonds pour un projet.",
-        feedbackIncorrect: "Pas tout à fait. Ce n’est pas un concours littéraire ni un article scientifique."
+        correctIndex: 1,
+        feedbackCorrect: "Exact! Il s’agit de convaincre un organisme de financer un projet réaliste et pertinent.",
+        feedbackIncorrect: "Non, une demande doit montrer un projet clair et planifié, pas juste une idée vague ou un article déjà réalisé."
       },
       {
-        question: "Laquelle de ces affirmations est FAUSSE concernant une demande de subvention ?",
+        question: "Parmi ces affirmations, laquelle décrit une mauvaise pratique dans une demande de subvention ?",
         options: [
-          "C’est un exercice d’improvisation sur le coin d’une table.",
-          "Il faut présenter un argumentaire clair et structuré.",
-          "La demande doit démontrer la capacité de l’équipe à réaliser le projet."
+          "Impliquer les partenaires dès la planification de la demande.",
+          "S’auto-congratuler en vantant uniquement l’équipe sans preuves concrètes.",
+          "Structurer un argumentaire clair et adapté au public évaluateur."
         ],
-        correctIndex: 0,
-        feedbackCorrect: "Bonne réponse! Une demande sérieuse ne s’improvise pas.",
-        feedbackIncorrect: "Incorrect. En réalité, ce n’est pas un exercice d’improvisation."
+        correctIndex: 1,
+        feedbackCorrect: "Bonne réponse! La subvention n’est pas un exercice d’autosatisfaction, il faut plutôt des preuves et arguments solides.",
+        feedbackIncorrect: "Incorrect. S’auto-congratuler est à éviter; il faut convaincre avec des arguments pertinents et des preuves."
       },
       {
-        question: "Dans une demande de subvention, il faut surtout :",
+        question: "Dans une demande de subvention, que signifie ‘vendre l’idée’ ?",
         options: [
-          "Vendre l’idée et convaincre du bienfondé du projet.",
-          "Décrire en détail les résultats déjà obtenus.",
-          "Organiser un débat scientifique sur le sujet."
+          "Détailler précisément les résultats scientifiques obtenus avant la soumission.",
+          "Convaincre par un récit structuré et persuasif le comité que le projet mérite un financement.",
+          "Rédiger un texte accessible à tous, sans tenir compte du domaine d’expertise."
         ],
-        correctIndex: 0,
-        feedbackCorrect: "Oui! On vend l’idée car les résultats ne sont pas encore connus.",
-        feedbackIncorrect: "Non, ce n’est pas un article scientifique ni un débat."
+        correctIndex: 1,
+        feedbackCorrect: "Exact! Il faut un argumentaire convaincant, car les résultats ne sont pas encore connus.",
+        feedbackIncorrect: "Non, la vente de l’idée passe par un argumentaire adapté au comité, pas par un article vulgarisé ou des résultats déjà acquis."
       }
     ];
 
@@ -130,11 +131,9 @@
         feedbackEl.textContent = q.feedbackIncorrect;
         feedbackEl.className = 'feedback incorrect';
       }
-      // Désactiver tous les boutons pour éviter plusieurs clics
       const buttons = container.querySelectorAll('button');
       buttons.forEach(btn => btn.disabled = true);
 
-      // Passer à la question suivante après 2 secondes
       setTimeout(() => {
         currentQuestion++;
         if (currentQuestion < quizData.length) {
@@ -145,7 +144,6 @@
       }, 2000);
     }
 
-    // Démarrer le quiz
     showQuestion();
   </script>
 </body>
