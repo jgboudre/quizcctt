@@ -1,150 +1,128 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Quiz Demande de Subvention - CCTT</title>
-  <!-- Police Archivo Narrow -->
-  <link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz sur la mobilisation des connaissances</title>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Archivo Narrow', sans-serif;
-      background: #f9f9f9;
-      padding: 20px;
-      max-width: 700px;
+      background-color: #f9fafb;
+      color: #1f2937;
+      padding: 40px;
+      max-width: 800px;
       margin: auto;
-      color: #333;
+    }
+    .quiz-container {
+      background-color: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
     h1 {
-      text-align: center;
-      margin-bottom: 30px;
-      color: #2a6ebb;
+      font-size: 28px;
+      margin-bottom: 20px;
     }
     .question {
-      background: white;
-      padding: 20px;
       margin-bottom: 25px;
-      border-radius: 8px;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
     }
-    .question h2 {
-      font-weight: 700;
-      margin-bottom: 15px;
+    .question p {
+      font-weight: bold;
+      font-size: 18px;
+    }
+    .choices label {
+      display: block;
+      margin-bottom: 10px;
+      cursor: pointer;
     }
     button {
-      font-family: 'Archivo Narrow', sans-serif;
-      background: #FF6F00; /* orange CCTT */
-      color: white;
+      background-color: #f97316;
+      color: #000000;
       border: none;
-      padding: 12px 20px;
-      margin: 5px 10px 10px 0;
-      border-radius: 5px;
+      padding: 14px 22px;
+      font-size: 16px;
+      border-radius: 6px;
       cursor: pointer;
-      font-weight: 700;
-      font-size: 1.1rem; /* plus grand */
-      transition: background-color 0.3s ease;
-    }
-    button:hover {
-      background: #e65a00; /* orange foncé au survol */
+      margin-top: 10px;
     }
     .feedback {
+      font-weight: bold;
       margin-top: 10px;
-      font-style: italic;
-      font-weight: 600;
     }
-    .correct {
-      color: green;
-    }
-    .incorrect {
-      color: red;
+    .hidden {
+      display: none;
     }
   </style>
 </head>
 <body>
-  <h1>Quiz Demande de Subvention</h1>
-
-  <div id="quiz-container" class="question">
-    <!-- Question et options générées par JS -->
+  <div class="quiz-container">
+    <h1>Quiz : Mobilisation des connaissances</h1>
+    <div id="quiz"></div>
+    <button id="submitBtn">Valider</button>
+    <div id="feedback" class="feedback"></div>
+    <button id="nextBtn" class="hidden">Suivant</button>
   </div>
 
   <script>
     const quizData = [
       {
-        question: "Quel est le principal objectif d'une demande de subvention ?",
-        options: [
-          "Présenter une idée originale sans obligation de planification.",
-          "Obtenir un financement en démontrant la pertinence et la faisabilité du projet.",
-          "Écrire un article scientifique sur les résultats d’une recherche déjà terminée."
+        question: "Parmi les propositions suivantes, cochez celles qui correspondent à une définition correcte de la mobilisation des connaissances.",
+        choices: [
+          "Vulgarisation scientifique dans une revue grand public.",
+          "Transfert des résultats de recherche à des partenaires en vue d’un changement de pratique.",
+          "Sensibilisation d’acteurs décisionnels à des enjeux émergents par le biais de données probantes.",
+          "Publication d’un article scientifique dans une revue à comité de lecture.",
+          "Collaboration avec des usagers pour co-construire des recommandations issues d’un projet."
         ],
-        correctIndex: 1,
-        feedbackCorrect: "Exact! Il s’agit de convaincre un organisme de financer un projet réaliste et pertinent.",
-        feedbackIncorrect: "Non, une demande doit montrer un projet clair et planifié, pas juste une idée vague ou un article déjà réalisé."
-      },
-      {
-        question: "Parmi ces affirmations, laquelle décrit une mauvaise pratique dans une demande de subvention ?",
-        options: [
-          "Impliquer les partenaires dès la planification de la demande.",
-          "S’auto-congratuler en vantant uniquement l’équipe sans preuves concrètes.",
-          "Structurer un argumentaire clair et adapté au public évaluateur."
-        ],
-        correctIndex: 1,
-        feedbackCorrect: "Bonne réponse! La subvention n’est pas un exercice d’autosatisfaction, il faut plutôt des preuves et arguments solides.",
-        feedbackIncorrect: "Incorrect. S’auto-congratuler est à éviter; il faut convaincre avec des arguments pertinents et des preuves."
-      },
-      {
-        question: "Dans une demande de subvention, que signifie ‘vendre l’idée’ ?",
-        options: [
-          "Détailler précisément les résultats scientifiques obtenus avant la soumission.",
-          "Convaincre par un récit structuré et persuasif le comité que le projet mérite un financement.",
-          "Rédiger un texte accessible à tous, sans tenir compte du domaine d’expertise."
-        ],
-        correctIndex: 1,
-        feedbackCorrect: "Exact! Il faut un argumentaire convaincant, car les résultats ne sont pas encore connus.",
-        feedbackIncorrect: "Non, la vente de l’idée passe par un argumentaire adapté au comité, pas par un article vulgarisé ou des résultats déjà acquis."
+        correctAnswers: [1, 2, 4], // 0-indexé : correspond à 2, 3, 5
+        multiple: true
       }
+      // Tu peux ajouter d'autres questions ici si désiré.
     ];
 
     let currentQuestion = 0;
-    const container = document.getElementById('quiz-container');
 
-    function showQuestion() {
+    const quizEl = document.getElementById("quiz");
+    const submitBtn = document.getElementById("submitBtn");
+    const feedbackEl = document.getElementById("feedback");
+    const nextBtn = document.getElementById("nextBtn");
+
+    function loadQuestion() {
       const q = quizData[currentQuestion];
-      container.innerHTML = `
-        <h2>Question ${currentQuestion + 1} / ${quizData.length}</h2>
-        <p>${q.question}</p>
-        <div>
-          ${q.options.map((opt, i) => 
-            `<button onclick="checkAnswer(${i})">${opt}</button>`
-          ).join('')}
-        </div>
-        <div id="feedback" class="feedback"></div>
-      `;
+      quizEl.innerHTML = `<div class="question"><p>${q.question}</p><div class="choices">` +
+        q.choices.map((choice, i) => `
+          <label>
+            <input type="checkbox" name="choice" value="${i}"> ${choice}
+          </label>
+        `).join('') + '</div></div>';
+
+      feedbackEl.textContent = "";
+      nextBtn.classList.add("hidden");
     }
 
-    function checkAnswer(selectedIndex) {
-      const q = quizData[currentQuestion];
-      const feedbackEl = document.getElementById('feedback');
-      if (selectedIndex === q.correctIndex) {
-        feedbackEl.textContent = q.feedbackCorrect;
-        feedbackEl.className = 'feedback correct';
+    submitBtn.addEventListener("click", () => {
+      const selected = Array.from(document.querySelectorAll('input[name="choice"]:checked')).map(input => parseInt(input.value));
+      const correct = quizData[currentQuestion].correctAnswers;
+
+      const isCorrect = selected.length === correct.length && selected.every(v => correct.includes(v));
+      feedbackEl.textContent = isCorrect ? "Bonne réponse! ✅" : "Ce n’est pas tout à fait ça. ❌";
+
+      nextBtn.classList.remove("hidden");
+    });
+
+    nextBtn.addEventListener("click", () => {
+      currentQuestion++;
+      if (currentQuestion < quizData.length) {
+        loadQuestion();
       } else {
-        feedbackEl.textContent = q.feedbackIncorrect;
-        feedbackEl.className = 'feedback incorrect';
+        quizEl.innerHTML = "<p>Merci d’avoir complété le quiz!</p>";
+        submitBtn.style.display = "none";
+        nextBtn.style.display = "none";
       }
-      const buttons = container.querySelectorAll('button');
-      buttons.forEach(btn => btn.disabled = true);
+    });
 
-      setTimeout(() => {
-        currentQuestion++;
-        if (currentQuestion < quizData.length) {
-          showQuestion();
-        } else {
-          container.innerHTML = '<h2>Quiz terminé!</h2><p>Merci d’avoir participé.</p>';
-        }
-      }, 2000);
-    }
-
-    showQuestion();
+    loadQuestion();
   </script>
 </body>
 </html>
