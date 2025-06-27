@@ -53,6 +53,11 @@
     .hidden {
       display: none;
     }
+    .explanation {
+      font-style: italic;
+      margin-top: 6px;
+      font-size: 15px;
+    }
   </style>
 </head>
 <body>
@@ -61,21 +66,26 @@
     <div id="quiz"></div>
     <button id="submitBtn">Valider</button>
     <div id="feedback" class="feedback"></div>
+    <div id="explanation" class="explanation"></div>
     <button id="nextBtn" class="hidden">Suivant</button>
   </div>
 
   <script>
     const quizData = [
       {
-        question: "Parmi les propositions suivantes, cochez celles qui correspondent à une définition correcte de la mobilisation des connaissances.",
+        question: "Parmi les propositions suivantes, cochez toutes celles qui correspondent à une définition correcte ou à une forme pertinente de mobilisation des connaissances",
         choices: [
           "Vulgarisation scientifique dans une revue grand public.",
           "Transfert des résultats de recherche à des partenaires en vue d’un changement de pratique.",
           "Sensibilisation d’acteurs décisionnels à des enjeux émergents par le biais de données probantes.",
           "Publication d’un article scientifique dans une revue à comité de lecture.",
           "Collaboration avec des usagers pour co-construire des recommandations issues d’un projet."
+          "Organisation d’un webinaire interactif avec des parties prenantes dès le début du projet."
+          "Utilisation de capsules vidéo TikTok pour présenter les résultats à un large public."
+         "Animation d’un atelier de co-interprétation des résultats avec des acteurs terrain."
         ],
-        correctAnswers: [0, 1, 2, 4],
+        correctAnswers: [2, 3, 5, 6,8],
+        explanation: "❌ Explication : Les énoncés 1, 4 et 7 relèvent davantage de la diffusion ou de la vulgarisation, pas nécessairement de la mobilisation, car ils ne visent pas un usage direct des connaissances ou une co-construction. L’énoncé 7 peut être à la frontière, mais n’implique pas forcément une transformation ou un ancrage dans la pratique.",
         multiple: true
       },
       {
@@ -87,15 +97,16 @@
           "Elle est obligatoire dans toutes les demandes de subvention."
         ],
         correctAnswers: [0, 2],
+        explanation: "Dans la recherche appliquée, la mobilisation des connaissances renforce l'utilité des résultats et permet d'impliquer activement les utilisateurs finaux ou les parties prenantes dans le processus.",
         multiple: true
-      }
-    ];
-
+      },
+   
     let currentQuestion = 0;
 
     const quizEl = document.getElementById("quiz");
     const submitBtn = document.getElementById("submitBtn");
     const feedbackEl = document.getElementById("feedback");
+    const explanationEl = document.getElementById("explanation");
     const nextBtn = document.getElementById("nextBtn");
 
     function loadQuestion() {
@@ -103,20 +114,24 @@
       quizEl.innerHTML = `<div class="question"><p>${q.question}</p><div class="choices">` +
         q.choices.map((choice, i) => `
           <label>
-            <input type="checkbox" name="choice" value="${i}"> ${choice}
+            <input type="${q.multiple ? 'checkbox' : 'radio'}" name="choice" value="${i}"> ${choice}
           </label>
         `).join('') + '</div></div>';
 
       feedbackEl.textContent = "";
+      explanationEl.textContent = "";
       nextBtn.classList.add("hidden");
     }
 
     submitBtn.addEventListener("click", () => {
-      const selected = Array.from(document.querySelectorAll('input[name="choice"]:checked')).map(input => parseInt(input.value));
-      const correct = quizData[currentQuestion].correctAnswers;
+      const inputs = Array.from(document.querySelectorAll('input[name="choice"]'));
+      const selected = inputs.filter(input => input.checked).map(input => parseInt(input.value));
+      const q = quizData[currentQuestion];
+      const correct = q.correctAnswers;
 
       const isCorrect = selected.length === correct.length && selected.every(v => correct.includes(v));
       feedbackEl.textContent = isCorrect ? "Bonne réponse! ✅" : "Ce n’est pas tout à fait ça. ❌";
+      explanationEl.textContent = q.explanation || "";
 
       nextBtn.classList.remove("hidden");
     });
@@ -129,6 +144,7 @@
         quizEl.innerHTML = "<p>Merci d’avoir complété le quiz!</p>";
         submitBtn.style.display = "none";
         nextBtn.style.display = "none";
+        explanationEl.textContent = "";
       }
     });
 
