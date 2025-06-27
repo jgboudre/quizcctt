@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quiz – La mobilisation des connaissances</title>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quiz – Demandes de subvention</title>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow&display=swap" rel="stylesheet" />
   <style>
     body {
       font-family: 'Archivo Narrow', sans-serif;
@@ -14,7 +14,7 @@
       max-width: 800px;
       margin: auto;
     }
-    .quiz-container {
+    .container {
       background-color: white;
       padding: 30px;
       border-radius: 12px;
@@ -23,6 +23,11 @@
     h1 {
       font-size: 28px;
       margin-bottom: 10px;
+    }
+    .intro p {
+      font-size: 16px;
+      line-height: 1.5;
+      margin-bottom: 20px;
     }
     .progress {
       font-size: 16px;
@@ -66,14 +71,31 @@
   </style>
 </head>
 <body>
-  <div class="quiz-container">
-    <h1>Quiz – La mobilisation des connaissances</h1>
-    <div id="progress" class="progress"></div>
-    <div id="quiz"></div>
-    <button id="submitBtn">Valider</button>
-    <div id="feedback" class="feedback"></div>
-    <div id="explanation" class="explanation"></div>
-    <button id="nextBtn" class="hidden">Suivant</button>
+  <div class="container">
+
+    <!-- PAGE D'INTRODUCTION -->
+    <div id="introPage">
+      <h1>Quiz – Les demandes de subvention en recherche appliquée</h1>
+      <div class="intro">
+        <p>
+          Ce quiz vous propose de tester vos connaissances sur différents éléments clés liés aux demandes de subvention en recherche appliquée.
+          Vous y trouverez des questions portant, entre autres, sur la mobilisation des connaissances, les attentes des organismes subventionnaires,
+          et les bonnes pratiques à adopter.
+        </p>
+      </div>
+      <button id="startBtn">Commencer le quiz</button>
+    </div>
+
+    <!-- QUIZ -->
+    <div id="quizPage" class="hidden">
+      <div id="progress" class="progress"></div>
+      <div id="quiz"></div>
+      <button id="submitBtn">Valider</button>
+      <div id="feedback" class="feedback"></div>
+      <div id="explanation" class="explanation"></div>
+      <button id="nextBtn" class="hidden">Suivant</button>
+    </div>
+
   </div>
 
   <script>
@@ -100,16 +122,21 @@
           "Elle permet de valoriser les résultats de recherche en les rendant accessibles et utiles à différents publics.",
           "Elle assure une publication rapide des articles scientifiques.",
           "Elle favorise l’engagement des parties prenantes dans les projets de recherche.",
-          "Elle est requise dans toutes les demandes de subvention."
+          "Elle est requise dans toutes les demandes de subvention sans exception."
         ],
         correctAnswers: [0, 2],
         explanation: "Dans la recherche appliquée, la mobilisation des connaissances renforce l'utilité des résultats et permet d'impliquer activement les utilisateurs finaux ou les parties prenantes dans le processus.",
         multiple: true
       }
+      // Vous pouvez ajouter d'autres questions ici...
     ];
 
     let currentQuestion = 0;
 
+    // Références DOM
+    const introPage = document.getElementById("introPage");
+    const quizPage = document.getElementById("quizPage");
+    const startBtn = document.getElementById("startBtn");
     const quizEl = document.getElementById("quiz");
     const submitBtn = document.getElementById("submitBtn");
     const feedbackEl = document.getElementById("feedback");
@@ -117,6 +144,14 @@
     const nextBtn = document.getElementById("nextBtn");
     const progressEl = document.getElementById("progress");
 
+    // Démarrer le quiz
+    startBtn.addEventListener("click", () => {
+      introPage.classList.add("hidden");
+      quizPage.classList.remove("hidden");
+      loadQuestion();
+    });
+
+    // Charger la question
     function loadQuestion() {
       const q = quizData[currentQuestion];
       quizEl.innerHTML = `<div class="question"><p>${q.question}</p><div class="choices">` +
@@ -129,9 +164,11 @@
       feedbackEl.textContent = "";
       explanationEl.textContent = "";
       nextBtn.classList.add("hidden");
+      submitBtn.disabled = false;
       progressEl.textContent = `Question ${currentQuestion + 1} sur ${quizData.length}`;
     }
 
+    // Validation de la réponse
     submitBtn.addEventListener("click", () => {
       const inputs = Array.from(document.querySelectorAll('input[name="choice"]'));
       const selected = inputs.filter(input => input.checked).map(input => parseInt(input.value));
@@ -148,8 +185,10 @@
       explanationEl.textContent = q.explanation || "";
 
       nextBtn.classList.remove("hidden");
+      submitBtn.disabled = true;
     });
 
+    // Passage à la question suivante
     nextBtn.addEventListener("click", () => {
       currentQuestion++;
       if (currentQuestion < quizData.length) {
@@ -163,8 +202,6 @@
         progressEl.textContent = "";
       }
     });
-
-    loadQuestion();
   </script>
 </body>
 </html>
