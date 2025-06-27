@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quiz sur la mobilisation des connaissances</title>
+  <title>Quiz – La mobilisation des connaissances</title>
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow&display=swap" rel="stylesheet">
   <style>
     body {
@@ -22,7 +22,12 @@
     }
     h1 {
       font-size: 28px;
+      margin-bottom: 10px;
+    }
+    .progress {
+      font-size: 16px;
       margin-bottom: 20px;
+      color: #6b7280;
     }
     .question {
       margin-bottom: 25px;
@@ -62,7 +67,8 @@
 </head>
 <body>
   <div class="quiz-container">
-    <h1>Quiz : Mobilisation des connaissances</h1>
+    <h1>Quiz – La mobilisation des connaissances</h1>
+    <div id="progress" class="progress"></div>
     <div id="quiz"></div>
     <button id="submitBtn">Valider</button>
     <div id="feedback" class="feedback"></div>
@@ -73,34 +79,35 @@
   <script>
     const quizData = [
       {
-        question: "Parmi les propositions suivantes, cochez toutes celles qui correspondent à une définition correcte ou à une forme pertinente de mobilisation des connaissances",
+        question: "Cochez toutes les propositions qui illustrent correctement une définition ou une forme pertinente de mobilisation des connaissances.",
         choices: [
           "Vulgarisation scientifique dans une revue grand public.",
           "Transfert des résultats de recherche à des partenaires en vue d’un changement de pratique.",
           "Sensibilisation d’acteurs décisionnels à des enjeux émergents par le biais de données probantes.",
           "Publication d’un article scientifique dans une revue à comité de lecture.",
-          "Collaboration avec des usagers pour co-construire des recommandations issues d’un projet."
-          "Organisation d’un webinaire interactif avec des parties prenantes dès le début du projet."
-          "Utilisation de capsules vidéo TikTok pour présenter les résultats à un large public."
-         "Animation d’un atelier de co-interprétation des résultats avec des acteurs terrain."
+          "Collaboration avec des usagères et usagers pour co-construire des recommandations issues d’un projet.",
+          "Organisation d’un webinaire interactif avec des parties prenantes dès le début du projet.",
+          "Utilisation de capsules vidéo TikTok pour présenter les résultats à un large public.",
+          "Animation d’un atelier de co-interprétation des résultats avec des acteurs terrain."
         ],
-        correctAnswers: [2, 3, 5, 6,8],
-        explanation: "❌ Explication : Les énoncés 1, 4 et 7 relèvent davantage de la diffusion ou de la vulgarisation, pas nécessairement de la mobilisation, car ils ne visent pas un usage direct des connaissances ou une co-construction. L’énoncé 7 peut être à la frontière, mais n’implique pas forcément une transformation ou un ancrage dans la pratique.",
+        correctAnswers: [1, 2, 4, 5, 7],
+        explanation: "❌ Les énoncés 0, 3 et 6 relèvent davantage de la diffusion ou de la vulgarisation. ✔️ Les énoncés 1, 2, 4, 5 et 7 illustrent des formes interactives, collaboratives ou stratégiques de mobilisation des connaissances. La MC vise un usage direct, une transformation ou une appropriation des résultats dans un contexte donné.",
         multiple: true
       },
       {
-        question: "Pourquoi la mobilisation des connaissances est-elle importante dans le contexte de la recherche appliquée?",
+        question: "Pourquoi la mobilisation des connaissances est-elle importante en recherche appliquée ?",
         choices: [
           "Elle permet de valoriser les résultats de recherche en les rendant accessibles et utiles à différents publics.",
           "Elle assure une publication rapide des articles scientifiques.",
           "Elle favorise l’engagement des parties prenantes dans les projets de recherche.",
-          "Elle est obligatoire dans toutes les demandes de subvention."
+          "Elle est requise dans toutes les demandes de subvention."
         ],
         correctAnswers: [0, 2],
         explanation: "Dans la recherche appliquée, la mobilisation des connaissances renforce l'utilité des résultats et permet d'impliquer activement les utilisateurs finaux ou les parties prenantes dans le processus.",
         multiple: true
-      },
-   
+      }
+    ];
+
     let currentQuestion = 0;
 
     const quizEl = document.getElementById("quiz");
@@ -108,6 +115,7 @@
     const feedbackEl = document.getElementById("feedback");
     const explanationEl = document.getElementById("explanation");
     const nextBtn = document.getElementById("nextBtn");
+    const progressEl = document.getElementById("progress");
 
     function loadQuestion() {
       const q = quizData[currentQuestion];
@@ -121,11 +129,17 @@
       feedbackEl.textContent = "";
       explanationEl.textContent = "";
       nextBtn.classList.add("hidden");
+      progressEl.textContent = `Question ${currentQuestion + 1} sur ${quizData.length}`;
     }
 
     submitBtn.addEventListener("click", () => {
       const inputs = Array.from(document.querySelectorAll('input[name="choice"]'));
       const selected = inputs.filter(input => input.checked).map(input => parseInt(input.value));
+      if (selected.length === 0) {
+        feedbackEl.textContent = "Veuillez sélectionner au moins une réponse.";
+        explanationEl.textContent = "";
+        return;
+      }
       const q = quizData[currentQuestion];
       const correct = q.correctAnswers;
 
@@ -141,10 +155,12 @@
       if (currentQuestion < quizData.length) {
         loadQuestion();
       } else {
-        quizEl.innerHTML = "<p>Merci d’avoir complété le quiz!</p>";
+        quizEl.innerHTML = `<p>Merci d’avoir complété le quiz ! 🎉</p>`;
         submitBtn.style.display = "none";
         nextBtn.style.display = "none";
         explanationEl.textContent = "";
+        feedbackEl.textContent = "";
+        progressEl.textContent = "";
       }
     });
 
