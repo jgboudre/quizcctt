@@ -75,10 +75,20 @@
           "Publication d’un article scientifique dans une revue à comité de lecture.",
           "Collaboration avec des usagers pour co-construire des recommandations issues d’un projet."
         ],
-        correctAnswers: [1, 2, 4], // 0-indexé : correspond à 2, 3, 5
+        correctAnswers: [0, 1, 2, 4],
+        multiple: true
+      },
+      {
+        question: "Pourquoi la mobilisation des connaissances est-elle importante dans le contexte de la recherche appliquée?",
+        choices: [
+          "Elle permet de valoriser les résultats de recherche en les rendant accessibles et utiles à différents publics.",
+          "Elle assure une publication rapide des articles scientifiques.",
+          "Elle favorise l’engagement des parties prenantes dans les projets de recherche.",
+          "Elle est obligatoire dans toutes les demandes de subvention."
+        ],
+        correctAnswers: [0, 2],
         multiple: true
       }
-      // Tu peux ajouter d'autres questions ici si désiré.
     ];
 
     let currentQuestion = 0;
